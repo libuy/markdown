@@ -35,7 +35,7 @@
 <html>
     <head>
         <meta charset="utf-8">   * 인코딩 방식은 utf-8
-        <title>제목</title>      * 탭에 표시되는 이ㅡㄻ 설정
+        <title>제목</title>      * 탭에 표시되는 이름 설정
     </head>
     .
     .
@@ -137,6 +137,7 @@
 >>   <img src = "이미지 url" alt="사진 설명">
 >>   <img src = "이미지 url" height="사이즈" width="사이즈">
 >>   ````
+>>
 >>> *(이미지 파일은 html과 같은 폴더에 있어야함)
 ><br>
 >
@@ -233,6 +234,7 @@
 >> <br>
 >>
 >> -기본적인 폼 태그의 형태
+>>
 >>   ````html
 >>   <form action = "전송받을 대상" mathod = "보내는 방식">
 >>          <input type = "타입지정" name = "입력받은 값의 이름" placeholder = "입력란 문구">
@@ -240,6 +242,7 @@
 >>   ````
 >>
 >> -회원가입 화면으로 보는 태그 사용법
+>>
 >>   ````html
 >>   <form action = "전송받을 대상" mathod = "보내는 방식">
 >>          <label for="userid">아이디: </label>
