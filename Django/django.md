@@ -61,14 +61,6 @@
 
 <br>
 
-* 모듈
-
-````python
-from django.contrib import admin
-from django. urls import path
-from . import views
-from django.shortcuts import render
-````
 
 * Path
 
@@ -286,7 +278,7 @@ path('edit/<str:id>',edit,name="edit")
 
 ````python
 def update(request, id):
-    update-blog = Blog.objects.get(id=id)
+    update_blog = Blog.objects.get(id=id)
     update_blog.클래스 변수 = request.POST["이름"]
     ...
     update_blog.save()
@@ -330,3 +322,203 @@ path('delete/<str:id>',delete,name="delete")
 ````python
 <a herf="{% url 'delete' blog.id %}">삭제</a>
 ````
+
+----
+
+<br>
+
+## Template 상속
+
+<br>
+
+* base.html 파일에 상속할 코드 작성
+
+* base.html의 body 안에 아래 코드 기입
+
+````html
+<div class="container">
+  {% block content %}
+  {% endblock %}
+</div>
+````
+
+* 상속받을 파일에 아래 형식으로 코드 기입
+
+````html
+{% extends 'base.html' %}
+{% block content %}
+  .
+  .
+  .
+{% endblock %}
+````
+
+* settings.py 의 'DIRS'에 ['templates 경로'] 추가
+
+<br>
+
+----
+<br>
+
+## 정적 파일
+
+<br>
+
+### **Static**  : 개발자가 서버를 개발할 때 미리 넣어놓은 정적 파일 (img,js,css)
+
+<br>
+
+1. static 폴더 생성 : App 폴더 내에 static 폴더 만들고, 파일 저장
+
+2. settings.py →
+
+````python
+STATICFILES_DIRS = [경로(BASE_DIR,'app의 이름','static')]   # 현재 static 파일들이 있는 경로
+
+STATIC_ROOT = 경로(BASE_DIR,'static')   # static 파일을 모으는 곳
+````
+
+3. static 파일 모으기 : terminal에 python manage.py collectstatic 입력
+
+4. static 파일 띄우기 : body 상단에 {% load static %} 입력 후, 삽입 할 위치에 {% static '파일'%} 삽입
+
+<br>
+
+### **media** : 사용자가 업로드 할 수 있는 파일
+
+<br>
+
+※ 이미지 업로드 구현해보기
+
+
+1. settings.py →
+
+````html
+MEDIA_ROOT = 경로(BASE_DIR,'midea')   # 이용자가 업로드한 파일을 모으는 곳
+
+MEDIA_URL = '/media/'
+````
+
+2. urls.py →
+
+````python
+from django.conf import settings
+from django.conf.urls.static import static
+
+urlpatterns = [
+    path(...)
+    .
+    .
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+````
+
+3. models.py →
+
+````python
+class Blog(models.Model):
+    .
+    .
+    image = models.ImageField(upload_to="blog/", blank=True, null=True)
+    # upload_to : 업로드할 폴더를 지정
+````
+
+4. terminal → pip install pillow (imagefield를 사용할 때 설치 필수)
+
+5. 업로드 구현
+
+````html
+<form action="{%url 'create'%}"  method="post" enctype="multipart/form-data">
+  ..<input type="file" name="image">..
+</form>
+````
+
+6. views.py → create 내에 new_blog.image = request.FILES['image']
+
+7. 보여주기 : detail.html →
+
+````html
+{% if blog.image %}
+..<img scr="{{blog.image.url}} alt="">..
+{% endif %}
+````
+
+----
+
+<br>
+
+## Form
+
+1. form.py 파일 생성 후
+
+````python
+from django import forms
+from .models import Blog
+
+class BlogForm(forms.ModelForm):
+  class Meta:
+    model = Blog
+    fields = ['models.py 내에 put_date를 제외한 모든 클래스 변수' ]
+````
+
+2. views.py →
+
+````python
+from .forms import BlogForm
+
+def new(request):
+  form = BlogForm()
+  return render(request,'new.html',{'form':form})
+````
+
+3. new.html에 form태그 구현
+
+4. views.py →
+
+````python
+def create(request):
+  form = BlogForm(request.POST,request.FILES)
+  if form.is_valid():
+    new_blog = form.save(commit=False)
+    new_blog.pub_date = timezone.now()
+    new_blog.save()
+    return redirect('detal',new_blog.id)
+  return redirect('home')
+````
+
+----
+
+<br>
+
+## User 확장과 인증
+
+* auth(authentication)모듈
+>
+> 1. 클라이언트가 회원가입 요청
+> 2. 서버에서 유저테이블에 회원정보 저장
+> 3. 클라이언트가 서버에 로그인 요청
+> 4. 유저테이블에 정보 유무 확인
+> 5. 응답(로그인)
+
+<br>
+
+----
+
+<br>
+
+## Paginator
+
+<br>
+
+: 블로그 객체를 잘라서 보내주는 기능
+
+<br>
+
+### **Queryset Method**
+
+<br>
+
+* .objects.order_by('-pub_date') : 최신글부터 보여줌
+
+* .objects.filer(writer=author) : 조건에 만족하는 값을 반환
+
+* .objects.exlude(writer=author) : 조건에 만족하지 않는 값을 반환
