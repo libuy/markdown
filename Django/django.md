@@ -25,9 +25,11 @@
 
 ----
 
+
+## MTV 패턴
+
 <br>
 
-* **MTV패턴**
 >
 > Model : DataBase(DB) → Back End
 >
@@ -69,6 +71,8 @@ path('url', view.views내부함수, name='url명')
 ````
 
 <br>
+
+----
 
 ## Django 와 데이터베이스
 
@@ -323,9 +327,9 @@ path('delete/<str:id>',delete,name="delete")
 <a herf="{% url 'delete' blog.id %}">삭제</a>
 ````
 
-----
-
 <br>
+
+----
 
 ## Template 상속
 
@@ -358,7 +362,6 @@ path('delete/<str:id>',delete,name="delete")
 <br>
 
 ----
-<br>
 
 ## 정적 파일
 
@@ -442,11 +445,13 @@ class Blog(models.Model):
 {% endif %}
 ````
 
-----
-
 <br>
 
+----
+
 ## Form
+
+<br>
 
 1. form.py 파일 생성 후
 
@@ -485,9 +490,9 @@ def create(request):
   return redirect('home')
 ````
 
-----
-
 <br>
+
+----
 
 ## User 확장과 인증
 
@@ -502,8 +507,6 @@ def create(request):
 <br>
 
 ----
-
-<br>
 
 ## Paginator
 
